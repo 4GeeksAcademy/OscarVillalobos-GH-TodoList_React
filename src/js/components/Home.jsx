@@ -1,28 +1,64 @@
-import React from "react";
+import React, { useState } from "react";
 
-//include images into your bundle
-import rigoImage from "../../img/rigo-baby.jpg";
+export const Home = () => {
 
-//create your first component
-const Home = () => {
-	return (
-		<div className="text-center">
-            
+    const [task, setTask] = useState("");
+    const [todoList, setTodoList] = useState(['Ejemplo: Limpiar Cocina']);
 
-			<h1 className="text-center mt-5">Hello Rigo!</h1>
-			<p>
-				<img src={rigoImage} />
-			</p>
-			<a href="#" className="btn btn-success">
-				If you see this green button... bootstrap is working...
-			</a>
-			<p>
-				Made by{" "}
-				<a href="http://www.4geeksacademy.com">4Geeks Academy</a>, with
-				love!
-			</p>
-		</div>
-	);
+    // Maneja el cambio en el input.. revisar mas sobre hand..
+
+    const handletask = (event) => {
+        setTask(event.target.value);
+    }
+
+    // Borro la tarea ingresada segun su index...
+
+    const handRemove = (index) => {
+        setTodoList(todoList.filter((item, i) => i !== index));
+    }
+
+    // Aca se agregara una nueva tarea..e ira enganchada al form..
+
+    const inputSubmit = (event) => {
+        event.preventDefault();
+
+        if (task.trim() === '') {
+            setTask('');
+            return;
+        }
+        setTodoList([...todoList, task]);
+        setTask('');
+    }
+
+    return (
+        <div className="container">
+            <h1>Todos</h1>
+
+            <form onSubmit={inputSubmit}>
+                <input
+                    className="form-control"
+                    list="datalistOptions"
+                    id="ListOfInput"
+                    placeholder="Escribe una tarea."
+                    value={task}
+                    onChange={handletask}
+                />
+            </form>
+
+            <ul className="list-group">
+                {todoList.map((item, index) => (
+                    <li key={index} className="list-group-item d-flex justify-content-between hidden-icon">
+                        {item}
+                         <button className="btn btn-outline-dark" onClick={() => handRemove(index)}>X</button>
+                    </li>
+                ))}
+                
+                <li id="inputTask">
+                    {todoList.length} Tareas ingresadas Actualmente
+                </li>
+            </ul>
+        </div>
+    );
 };
 
 export default Home;
